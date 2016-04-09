@@ -22,12 +22,12 @@ public class Dijkstra {
         int[][] vertexMatrix = null;
         Vertex[] vertexArray = null;
         String fileName = "C:\\Users\\Cliff\\Desktop\\input1.txt";
+        int mstCost = 0;
         
         try {
             FileReader in = new FileReader(fileName);
             BufferedReader buffer = new BufferedReader(in);
             String line;
-            Scanner scanner = new Scanner(new File(fileName));
 
             //get n and m from line 1
             line = buffer.readLine();
@@ -44,9 +44,9 @@ public class Dijkstra {
             
             //begin reading the input file
             int u = 0;
-            while ((line = buffer.readLine()) != null) {
+            Scanner scanner = new Scanner(buffer.readLine());
+            while (scanner  != null) {
                 int counter = 0;
-                scanner = new Scanner(line);
                 int temp1 = 0, temp2 = 0;
                 int v, w;
                 
@@ -67,12 +67,17 @@ public class Dijkstra {
                     v = temp1;
                     w = temp2;
                     vertexMatrix[u][v] = w; //cost of edge uv
+                }  
+                try {
+                    scanner = new Scanner(buffer.readLine());
+                } catch (NullPointerException e) {
+                    scanner.close();
+                    scanner = null;
                 }
             }
             
             in.close();
             buffer.close();
-            scanner.close();
             
             /* At this point, the file has been read into vertexMatrix[u][v] where
              * the value at vertexMatrix[u][v] is the weight of that edge if it exists
@@ -106,6 +111,9 @@ public class Dijkstra {
                         if (currentSP + uvWeight < vertexArray[v].cost || 
                                 vertexArray[v].cost == DEFAULT_VALUE) {
                             vertexArray[v].cost = currentSP + uvWeight;
+                            mstCost += vertexMatrix[u][v];
+                            if (vertexArray[v].predecessor != DEFAULT_VALUE)
+                                mstCost -= vertexMatrix[vertexArray[v].predecessor][v];
                             vertexArray[v].predecessor = u;
                             queue.add(vertexArray[v]);
                         }
@@ -118,7 +126,7 @@ public class Dijkstra {
                 last = u;
             }
             
-            int p = 393;
+            int p = last;
             //System.out.println(vertexArray[last].cost);
             while(p != vertexArray[p].predecessor) {
                 if (vertexArray[p].predecessor == DEFAULT_VALUE) {
@@ -128,8 +136,8 @@ public class Dijkstra {
                     System.out.println(p + " " + vertexArray[p].predecessor);
                     p = vertexArray[p].predecessor;
                 }
-            }
-
+            } 
+            System.out.println("Total Cost: " + mstCost);
         } catch (IOException e) {
             //TODO
         }
