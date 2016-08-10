@@ -52,7 +52,7 @@ public class Heap {
     }
     
     public void buildMinHeap() {
-        for(int i = length / 2 - 1; i >= 0; i--) {
+        for(int i = length / 2; i >= 0; i--) {
             heapify(i);
         }
     }
